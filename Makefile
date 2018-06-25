@@ -6,7 +6,7 @@ run-client: all
 		./client
 all: mrproper teste.o server client clean
 server: socket-server.o utils.o stack.o server.o
-		gcc -o servidor teste.o socket-server.o utils.o stack.o server.o
+		gcc -pthread -o servidor teste.o socket-server.o utils.o stack.o server.o
 client: socket-client.o utils.o stack.o  client.o
 		gcc -o cliente teste.o socket-client.o utils.o stack.o client.o
 teste.o: teste.c

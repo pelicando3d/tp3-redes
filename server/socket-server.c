@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <pthread.h>
 
 int create_socket(int *socket_description)
 {
@@ -65,6 +66,22 @@ int wait_connection(int socket_description, int (* on_message_receive_callback)(
     /* Accept and incoming connection */
     puts("Waiting for incoming connections...");
     socket_address_length = sizeof(struct sockaddr_in);
+    pthread_t thread_id;
+
+    /* while( (client_sock = accept(client_sock, (struct sockaddr *)&client, (socklen_t*)&socket_address_length)) )
+    {
+        puts("Connection accepted");
+         
+        if( pthread_create( &thread_id , NULL ,  on_message_receive_callback , (void*) &client_sock) < 0)
+        {
+            perror("could not create thread");
+            return 1;
+        }
+         
+        //Now join the thread , so that we dont terminate before the thread
+        pthread_join( thread_id , NULL);
+        puts("Handler assigned");
+    } */
 
     /* Accept connection from an incoming client */
     client_sock = accept(socket_description, (struct sockaddr *)&client, (socklen_t *)&socket_address_length);
@@ -74,7 +91,9 @@ int wait_connection(int socket_description, int (* on_message_receive_callback)(
         return 1;
     }
     puts("Connection with client estabelish accepted");
-    return (*on_message_receive_callback)(client_sock);
+    pthread_create( &thread_id , NULL ,  on_message_receive_callback , (void*) &client_sock);
+    /* return (*on_message_receive_callback)(client_sock); */
+    return 1;
 }
 
 int socket_init(int port, int (* on_message_receive_callback)(int)) {
@@ -91,11 +110,12 @@ int socket_init(int port, int (* on_message_receive_callback)(int)) {
     /*Prepare the sockaddr_in structure*/
     if (bind_socket(socket_description, &server, port))
     {
+        printf("TEEEEEEEEESTE");
         return 1;
     }
 
     /* Listen */
     listen(socket_description, 3);
-    while (1) wait_connection(socket_description, on_message_receive_callback);
+    while(1) wait_connection(socket_description, on_message_receive_callback);
 
 }
