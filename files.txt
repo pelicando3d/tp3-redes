@@ -1,0 +1,6 @@
+file1|msg1
+file2|msg2
+file3|msg1
+file4|msg2
+file5|msg1
+file6|msg2

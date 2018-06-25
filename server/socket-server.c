@@ -78,7 +78,6 @@ int wait_connection(int socket_description, int (* on_message_receive_callback)(
 }
 
 int socket_init(int port, int (* on_message_receive_callback)(int)) {
-    printf("\n === Socket server ===\n");
     int socket_description;
     struct sockaddr_in server;
 
