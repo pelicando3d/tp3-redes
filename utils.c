@@ -5,37 +5,8 @@
 #include <time.h>
 #include <sys/queue.h>
 
-char **read_file(char *file_name)
-{
-    FILE *file;
-    char line[50];
-    int i, numLines = 0;
-    char ** rows = malloc(100*sizeof(char*));
-    if ((file = fopen(file_name, "r")) == NULL)
-    {
-        exit(1);
-    }
 
-   while(fgets(line, sizeof line, file)!=NULL) {
-        //check to be sure reading correctly
-
-        //add each filename into array of programs
-        rows[i]= malloc(50*sizeof(char));
-        rows[i]=strdup(line); 
-        i++;
-        //count number of programs in file
-        numLines++;
-    }
-    //check to be sure going into array correctly 
-    for (int j=0 ; j<numLines; j++) {
-        strtok(rows[j], "\n");
-        // printf("\n%s", rows[j]);
-    }
-
-    fclose(file);
-    return rows;
-}
-int number_of_lines(char* file_name)
+int number_of_lines(char *file_name)
 {
     FILE *file;
     char line[50];
@@ -46,7 +17,8 @@ int number_of_lines(char* file_name)
         exit(1);
     }
 
-   while(fgets(line, sizeof line, file)!=NULL) {
+    while (fgets(line, sizeof line, file) != NULL)
+    {
         numLines++;
     }
 
@@ -54,30 +26,75 @@ int number_of_lines(char* file_name)
     return numLines;
 }
 
-int validate_user(char user[15], char pass[15], char **users)
+char **read_file(char *file_name)
 {
-    // char str[40] = "";
-    // strcat(str,user);
-    // strcat(str,"|");
-    // strcat(str,pass);
-    // printf("\n%s", str);
-    int num_users = number_of_lines("users.txt");
-    for (int j=0 ; j<num_users; j++) 
+    FILE *file;
+    char line[50];
+    int i, numLines = 0;
+    char **rows = (char **)malloc(100 * sizeof(char *));
+    if ((file = fopen(file_name, "r")) == NULL)
     {
-        strtok(users[j], "\n");
-        printf("\n%s", users[j]);
-        char*user_aux, *pass_aux;
+        exit(1);
+    }
+
+    while (fgets(line, sizeof line, file) != NULL)
+    {
+        rows[i] = (char *)malloc(50 * sizeof(char));
+        rows[i] = strdup(line);
+        i++;
+        numLines++;
+    }
+    for (int j = 0; j < numLines; j++)
+    {
+        strtok(rows[j], "\n");
+    }
+
+    fclose(file);
+    return rows;
+}
+
+int validate_user(char* user, char* pass, char **users)
+{
+    int num_users = number_of_lines("users.txt");
+    
+    for (int j = 0; j < num_users-1; j++)
+    {
+
+        // strtok(users[j], "\n");
+
+        char *user_aux, *pass_aux;
         strcpy(user_aux, users[j]);
         strtok_r(user_aux, "|", &pass_aux);
-        printf("'%s' '%s'", user_aux, pass_aux);
+        strtok(pass_aux, "\n");
+
+
+        if(strcmp(user_aux, user) == 0 && strcmp(pass_aux,pass) == 0)
+            return 0;
+        else if(strcmp(user_aux, user) == 0 && strcmp(pass_aux,pass) != 0)
+            return -1;
     }
+    return -2;
 }
 
 int main()
 {
-    char **files = read_file("files.txt");
-    char **users = read_file("users.txt");
-    printf("%s", files[0]);
-    validate_user("teste1", "senha1", files);
+    char **users = (char**)malloc(100*sizeof(char*));
+    int i = 0;
+    int num_users = number_of_lines("users.txt");
+    for(i = 0; i < num_users; i++){
+        users[i] = (char*)malloc(50*sizeof(char));
+    }
+    users = read_file("users.txt");
+    fflush(stdout);
+    printf("\n\n\n%d", validate_user("teste1", "senha1", users));
+
+    // char **files = (char**)malloc(100*sizeof(char*));
+    // i = 0;
+    // int num_files = number_of_lines("files.txt");
+    // for(i = 0; i < num_files; i++){
+    //     files[i] = (char*)malloc(50*sizeof(char));
+    // }
+    // files = read_file("files.txt");
+
     return 0;
 }
