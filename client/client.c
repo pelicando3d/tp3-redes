@@ -59,10 +59,10 @@ void create_message()
     char* input_message = malloc(sizeof(char) * COMMAND_MAX_SIZE);
     while (1)
     {
-        // N: Registro
+        /* // N: Registro
         // S: Envio   
         // R: Recebimento      
-        // L: Lista   
+        // L: Lista   */ 
 
         scanf("%s", &input_message);
         char choice = input_message[0];
@@ -71,25 +71,25 @@ void create_message()
         {
         case 'N':
         case 'n':
-            //funcao de registro
-            register_new_user(&input_message);
-            on_message_received();
+            /* //funcao de registro */
+/*             register_new_user(&input_message);
+ */            on_message_received();
             break;
         case 'S':
         case 's':
-            //funcao de envio
+            /* //funcao de envio */
             send_message(&input_message);
             on_message_received();
             return;
         case 'R':
         case 'r':
-            //funcao de recebimento
+            /* //funcao de recebimento */
             receive_message(&input_message);
             on_message_received();
             return;
         case 'L':
         case 'l':
-            //funcao de mostrar lista
+            /* //funcao de mostrar lista */
             list_message(&input_message);
             on_message_received();
             break;

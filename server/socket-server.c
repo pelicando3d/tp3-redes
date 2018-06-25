@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
+#include <pthread.h>
 #include <arpa/inet.h>
 
 int create_socket(int *socket_description)
@@ -58,16 +59,29 @@ int receive_message_from_client(int client_sock)
     return 0;
 }
 
-int wait_connection(int socket_description, int (* on_message_receive_callback)(int))
+int wait_connection(int socket_description, int (*on_message_receive_callback)(int))
 {
     int client_sock, socket_address_length;
     struct sockaddr client;
+    pthread_t thread_id;
     /* Accept and incoming connection */
     puts("Waiting for incoming connections...");
     socket_address_length = sizeof(struct sockaddr_in);
 
+    /* while ((client_sock = accept(socket_description, (struct sockaddr *)&client, (socklen_t *)&socket_address_length)) >= 0)
+    {
+        puts("Connection accepted");
+
+        if (pthread_create(&thread_id, NULL, on_message_receive_callback, (void *)&client_sock) < 0)
+        {
+            perror("could not create thread");
+            return 1;
+        }
+        pthread_join(thread_id, NULL);
+        puts("Handler assigned");
+    } */
     /* Accept connection from an incoming client */
-    client_sock = accept(socket_description, (struct sockaddr *)&client, (socklen_t *)&socket_address_length);
+     client_sock = accept(socket_description, (struct sockaddr *)&client, (socklen_t *)&socket_address_length);
     if (client_sock < 0)
     {
         perror("[Error] Client connection failed to estabelish.");
@@ -77,12 +91,13 @@ int wait_connection(int socket_description, int (* on_message_receive_callback)(
     return (*on_message_receive_callback)(client_sock);
 }
 
-int socket_init(int port, int (* on_message_receive_callback)(int)) {
+int socket_init(int port, int (*on_message_receive_callback)(int))
+{
     int socket_description;
     struct sockaddr_in server;
 
     /*Create socket*/
-    if(create_socket(&socket_description))
+    if (create_socket(&socket_description))
     {
         return 1;
     }
@@ -95,6 +110,6 @@ int socket_init(int port, int (* on_message_receive_callback)(int)) {
 
     /* Listen */
     listen(socket_description, 3);
-    while (1) wait_connection(socket_description, on_message_receive_callback);
-
+    /* while (1) */
+        wait_connection(socket_description, on_message_receive_callback);
 }

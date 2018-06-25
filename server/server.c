@@ -25,7 +25,7 @@ int on_message_receive_callback(int client_socket)
 
     while ((read_size = read(client_socket, client_message, sizeof(client_message))) > 0)
     {
-        // process_command(client_message, response);
+        /* // process_command(client_message, response); */
         write(client_socket, response, strlen(response));
         memset(&client_message, 0, sizeof(client_message));
     }

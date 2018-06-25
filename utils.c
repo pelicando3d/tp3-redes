@@ -30,7 +30,7 @@ char **read_file(char *file_name)
 {
     FILE *file;
     char line[50];
-    int i, numLines = 0;
+    int i, j, numLines = 0;
     char **rows = (char **)malloc(100 * sizeof(char *));
     if ((file = fopen(file_name, "r")) == NULL)
     {
@@ -44,7 +44,7 @@ char **read_file(char *file_name)
         i++;
         numLines++;
     }
-    for (int j = 0; j < numLines; j++)
+    for (j = 0; j < numLines; j++)
     {
         strtok(rows[j], "\n");
     }
@@ -56,11 +56,11 @@ char **read_file(char *file_name)
 int validate_user(char* user, char* pass, char **users)
 {
     int num_users = number_of_lines("users.txt");
-    
-    for (int j = 0; j < num_users-1; j++)
+    int j;
+    for (j = 0; j < num_users-1; j++)
     {
 
-        // strtok(users[j], "\n");
+        /*  strtok(users[j], "\n"); */
 
         char *user_aux, *pass_aux;
         strcpy(user_aux, users[j]);
@@ -76,7 +76,7 @@ int validate_user(char* user, char* pass, char **users)
     return -2;
 }
 
-int main()
+/* int main()
 {
     char **users = (char**)malloc(100*sizeof(char*));
     int i = 0;
@@ -97,4 +97,4 @@ int main()
     // files = read_file("files.txt");
 
     return 0;
-}
+} */
