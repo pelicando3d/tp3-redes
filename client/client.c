@@ -20,8 +20,29 @@ int main(int argc, char *argv[])
     }
     server_name = argv[1];
     server_port = atoi(argv[2]);
+    open_socket(server_name, server_port);
     create_message();
     return 0;
+}
+
+void register_message(char *message)
+{
+
+}
+
+void send_message(char *message)
+{
+
+}
+
+void receive_message(char *message)
+{
+
+}
+
+void list_message(char *message)
+{
+
 }
 
 int on_message_received()
@@ -100,23 +121,5 @@ void create_message()
     }
 }
 
-void register_message(char *message)
-{
 
-}
-
-void send_message(char *message)
-{
-
-}
-
-void receive_message(char *message)
-{
-
-}
-
-void list_message(char *message)
-{
-
-}
 
