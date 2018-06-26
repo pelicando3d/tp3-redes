@@ -68,27 +68,17 @@ int wait_connection(int socket_description, int (*on_message_receive_callback)(i
     puts("Waiting for incoming connections...");
     socket_address_length = sizeof(struct sockaddr_in);
 
-    /* while ((client_sock = accept(socket_description, (struct sockaddr *)&client, (socklen_t *)&socket_address_length)) >= 0)
-    {
-        puts("Connection accepted");
-
-        if (pthread_create(&thread_id, NULL, on_message_receive_callback, (void *)&client_sock) < 0)
-        {
-            perror("could not create thread");
-            return 1;
-        }
-        pthread_join(thread_id, NULL);
-        puts("Handler assigned");
-    } */
     /* Accept connection from an incoming client */
-     client_sock = accept(socket_description, (struct sockaddr *)&client, (socklen_t *)&socket_address_length);
+    client_sock = accept(socket_description, (struct sockaddr *)&client, (socklen_t *)&socket_address_length);
+    pthread_create(&thread_id, NULL, on_message_receive_callback, (void *)&client_sock);
     if (client_sock < 0)
     {
         perror("[Error] Client connection failed to estabelish.");
         return 1;
     }
     puts("Connection with client estabelish accepted");
-    return (*on_message_receive_callback)(client_sock);
+    /* return (*on_message_receive_callback)(client_sock); */
+    return 1;
 }
 
 int socket_init(int port, int (*on_message_receive_callback)(int))
@@ -110,6 +100,6 @@ int socket_init(int port, int (*on_message_receive_callback)(int))
 
     /* Listen */
     listen(socket_description, 3);
-    /* while (1) */
+    while (1)
         wait_connection(socket_description, on_message_receive_callback);
 }

@@ -22,6 +22,7 @@ int on_message_receive_callback(int client_socket)
     int read_size;
     char client_message[3];
     char response[3] = "";
+    printf("VEEEEEEEEEEEEEEEY");
 
     while ((read_size = read(client_socket, client_message, sizeof(client_message))) > 0)
     {
