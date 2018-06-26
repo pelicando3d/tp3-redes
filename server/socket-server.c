@@ -59,7 +59,7 @@ int receive_message_from_client(int client_sock)
     return 0;
 }
 
-int wait_connection(int socket_description, int (*on_message_receive_callback)(int))
+int wait_connection(int socket_description, int (*on_message_receive_callback)(void *))
 {
     int client_sock, socket_address_length;
     struct sockaddr client;
@@ -77,7 +77,6 @@ int wait_connection(int socket_description, int (*on_message_receive_callback)(i
         return 1;
     }
     puts("Connection with client estabelish accepted");
-    /* return (*on_message_receive_callback)(client_sock); */
     return 1;
 }
 

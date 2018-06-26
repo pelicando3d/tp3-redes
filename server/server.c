@@ -7,7 +7,7 @@
 /* 
     Essa funcao define o comportamento da presente aplicacao ao receber uma mensagem de um client.
  */
-int on_message_receive_callback(int client_socket);
+int on_message_receive_callback(void * socket_desc);
 
 int main(int argc, char *argv[])
 {
@@ -17,12 +17,12 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-int on_message_receive_callback(int client_socket)
+int on_message_receive_callback( void * socket_desc)
 {
     int read_size;
     char client_message[3];
+    int client_socket = *(int*)socket_desc;
     char response[3] = "";
-    printf("VEEEEEEEEEEEEEEEY");
 
     while ((read_size = read(client_socket, client_message, sizeof(client_message))) > 0)
     {
